@@ -31,11 +31,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Jackson for JSON.
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-
+    // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
 }
 
 tasks.named('test') {

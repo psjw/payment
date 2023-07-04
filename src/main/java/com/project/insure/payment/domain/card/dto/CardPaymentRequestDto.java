@@ -1,9 +1,6 @@
 package com.project.insure.payment.domain.card.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
@@ -11,6 +8,8 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
+@Getter
 @ToString
 public class CardPaymentRequestDto {
 
@@ -30,7 +29,9 @@ public class CardPaymentRequestDto {
     private String cvc; //cvc(3자리 숫자)
 
     @NotBlank(message = "할부개월 수를 입력해 주세요.")
-    @Size(min = 1, max = 2)
+    @Positive
+    @Max(value=12)
+    @Pattern(regexp = "[0-9]", message = "결제액는 숫자형식만 지원합니다.")
     private Integer installmentMonth; //할부개월 수 0(일시불), 1 ~ 12
 
     @NotBlank(message = "결제액를 입력해 주세요.")

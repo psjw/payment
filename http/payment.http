@@ -1,0 +1,13 @@
+###1 결제 API 테스트
+POST {{payment-api}}/payment/card
+Content-Type: application/json
+
+{
+    "cardNo" : "12345678910",
+    "expiredPeriod" : "0723",
+    "cvc" : "323",
+    "installmentMonth" : 0,
+    "amount" : 100000,
+    "vat" : ""
+}
+###

@@ -1,6 +1,6 @@
 package com.project.insure.payment.domain.card.entity;
 
-import com.project.insure.payment.domain.card.code.PaymentMethod;
+import com.project.insure.payment.domain.card.code.PaymentCompany;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class CardPayment {
     private String paymentId;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    private PaymentCompany paymentType;
 
     @Column(length = 100, nullable = false)
     private String cardNo; //카드번호
