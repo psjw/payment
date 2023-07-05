@@ -4,58 +4,79 @@ import lombok.experimental.UtilityClass;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.Cipher;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.Key;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-@Component
+
+@UtilityClass
 public class AESUtil {
-    private String iv;
-    private Key keySpec;
+    /* PKCS#5와 PKCS#7 */
+    public static final String PADDING = "AES/CBC/PKCS5Padding";
 
-    /**
-     * 16자리의 키값을 입력하여 객체를 생성
-     */
-    final static String key = "1234123412341234";
+    /* 256비트(32바이트)의 키 */
+    private static final String KEY = "aes256encrypt123aes256encrypt123";
 
-    public AESUtil() throws UnsupportedEncodingException {
-        this.iv = key.substring(0, 16);
-        byte[] keyBytes = new byte[16];
-        byte[] b = key.getBytes("UTF-8");
-        int len = b.length;
-        if (len > keyBytes.length) {
-            len = keyBytes.length;
-        }
-        System.arraycopy(b, 0, keyBytes, 0, len);
-        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
-
-        this.keySpec = keySpec;
+    /* initialization vector */
+    private static byte[] getIv() {
+        return new byte[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }
 
-    /**
-     * AES256 으로 암호화
-     */
-    public String encrypt(String str) throws NoSuchAlgorithmException,
-            GeneralSecurityException, UnsupportedEncodingException {
-        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
-        byte[] encrypted = c.doFinal(str.getBytes("UTF-8"));
-        String enStr = new String(Base64.encodeBase64(encrypted));
-        return enStr;
+    public String encrypt(String plainText) throws NoSuchPaddingException, NoSuchAlgorithmException
+            , InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+        /* 32byte IV initialization */
+        byte[] iv = getIv();
+        /* KEY String -> byte */
+        byte[] keyData = KEY.getBytes();
+
+        /* keyData를 key로 지정, AES algorithm사용 */
+        SecretKey secureKey = new SecretKeySpec(keyData, "AES");
+
+        /* CBC PKCS5Padding 방식 사용 */
+        Cipher cipher = Cipher.getInstance(PADDING);
+        cipher.init(Cipher.ENCRYPT_MODE, secureKey, new IvParameterSpec(iv));
+
+        /* 암호화 */
+        byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+        return Base64.encodeBase64String(encrypted);
     }
 
-    /**
-     * AES256으로 암호화된 txt를 복호화
-     */
-    public String decrypt(String str) throws NoSuchAlgorithmException,
-            GeneralSecurityException, UnsupportedEncodingException {
-        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
-        byte[] byteStr = Base64.decodeBase64(str.getBytes());
-        return new String(c.doFinal(byteStr), "UTF-8");
+    public String decrypt(String cipherText) throws NoSuchPaddingException, NoSuchAlgorithmException
+            , InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+        // IOS url-encode 대응
+        cipherText = cipherText.replace(" ", "+");
+
+        /* 32byte IV initialization */
+        byte[] iv = getIv();
+        /* KEY String -> byte */
+        byte[] keyData = KEY.getBytes();
+
+        /* keyData를 key로 지정, AES algorithm사용 */
+        SecretKey secureKey = new SecretKeySpec(keyData, "AES");
+
+        /* CBC PKCS5Padding 방식 사용 */
+        Cipher cipher = Cipher.getInstance(PADDING);
+        cipher.init(Cipher.DECRYPT_MODE, secureKey, new IvParameterSpec(iv));
+
+        /* 복호화 */
+        byte[] decodedBytes = Base64.decodeBase64(cipherText.getBytes());
+        byte[] decrypted = cipher.doFinal(decodedBytes);
+
+        return new String(decrypted, StandardCharsets.UTF_8);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        String encrypt = AESUtil.encrypt("1234567890123456|1125|777");
+        System.out.println(encrypt);
+        System.out.println(AESUtil.decrypt(encrypt));
     }
 }

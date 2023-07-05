@@ -1,24 +1,23 @@
 package com.project.insure.payment.domain.card.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-public class CardCancelPayment {
+public class CardCancelPayment extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //아이디
 
-    private String cardNum; //카드번호
+    @Column(length = 20, nullable = false, unique = true)
+    private String cancelPaymentId;
 
+    @Column(length = 20, nullable = false, unique = true)
+    private String paymentId;
 
-    private String cvc; //cvc
-
-//    private String //유효기간
-    private String installmentMonth; //할부개월 수
+    @Column(length = 450, nullable = false)
+    private String dataBody;
 
 
 }

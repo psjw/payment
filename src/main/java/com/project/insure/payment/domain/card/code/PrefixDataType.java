@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentMethod {
+public enum PrefixDataType {
     결제("P"), 취소("C");
     private String code;
 

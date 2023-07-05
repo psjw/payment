@@ -3,7 +3,7 @@ package com.project.insure.payment.application.controller;
 import com.project.insure.payment.application.usecase.CardPaymentServiceFinder;
 import com.project.insure.payment.application.usecase.CardPaymentUsecase;
 import com.project.insure.payment.domain.card.code.PaymentCompany;
-import com.project.insure.payment.domain.card.code.PaymentMethod;
+import com.project.insure.payment.domain.card.code.PrefixDataType;
 import com.project.insure.payment.domain.card.dto.CardPaymentRequestDto;
 import com.project.insure.payment.domain.card.dto.CardPaymentResponseDto;
 import com.project.insure.payment.domain.card.dto.PaymentIdResponseDto;
@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.ByteBuffer;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/payment")
@@ -23,12 +21,14 @@ public class PaymentController {
 
     @GetMapping("/getPaymentId")
     public PaymentIdResponseDto getPaymentId(){
-        String paymentId = ManagementIdGeneratorUtil.getPaymentId(PaymentMethod.결제);
+        String paymentId = ManagementIdGeneratorUtil.getPaymentId(PrefixDataType.결제);
         return PaymentIdResponseDto.builder().paymentId(paymentId).build();
     }
 
     @PostMapping("/card")
-    public CardPaymentResponseDto cardPayment(@RequestBody CardPaymentRequestDto requestDto){
+    public CardPaymentResponseDto cardPayment(@RequestBody CardPaymentRequestDto requestDto
+            , @RequestHeader("Payment-Id") String paymentId
+            , @RequestHeader("Data-Type") String dataType){
         CardPaymentUsecase paymentUsecase = paymentServiceFinder.findPaymentUsecaseByCardCompany(PaymentCompany.Hana.name());
 
         paymentUsecase.payment(requestDto);

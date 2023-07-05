@@ -1,6 +1,9 @@
 ###1 결제 API 테스트
 POST {{payment-api}}/payment/card
 Content-Type: application/json
+Data-Type: PAYMENT
+Payment-Id: 1234512345ß
+
 
 {
     "cardNo" : "12345678910",

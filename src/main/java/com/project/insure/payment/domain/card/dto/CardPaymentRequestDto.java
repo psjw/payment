@@ -1,8 +1,15 @@
 package com.project.insure.payment.domain.card.dto;
 
+import com.project.insure.payment.domain.card.entity.CardPayment;
+import com.project.insure.util.EncryptAndDecryptDataGeneratorUtil;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.*;
+
+import java.util.Objects;
+
+import static com.project.insure.payment.domain.card.code.CardPaymentDataPadding.*;
 
 
 @NoArgsConstructor
@@ -40,5 +47,39 @@ public class CardPaymentRequestDto {
     @Pattern(regexp = "[0-9]", message = "결제액는 숫자형식만 지원합니다.")
     private Long amount; //결제액(100원 이상, 10억원 이하, 숫자)
     private Long vat; //부가가치세 (option)
+
+    public Long getVat(){
+        if(Objects.isNull(vat)){
+            this.vat =  Math.round((double) this.amount / (double) 11);
+        }
+        if(vat > amount ){
+            throw new RuntimeException("부가세(VAT)는 결재금액보다 클 수 없습니다.");
+        }
+        return vat;
+    }
+
+    public CardPayment dtoToCardPaymentEntity(String paymentId, String dataType){
+        StringBuffer resultStringBuffer = new StringBuffer();
+        int totalLength = 450;
+        resultStringBuffer.append(getLeftOrRightPaddingData(데이터구분, dataType))
+                .append(getLeftOrRightPaddingData(결제관리번호, paymentId))
+                .append(getLeftOrRightPaddingData(카드번호, this.cardNo))
+                .append(getLeftOrRightPaddingData(할부개월수, Integer.toString(this.installmentMonth)))
+                .append(getLeftOrRightPaddingData(카드유효기간, this.expiredPeriod))
+                .append(getLeftOrRightPaddingData(CVC, this.cvc))
+                .append(getLeftOrRightPaddingData(결제금액, Long.toString(this.amount)))
+                .append(getLeftOrRightPaddingData(부가가치세, Long.toString(getVat())));
+
+        String encryptDataBody = EncryptAndDecryptDataGeneratorUtil
+                .getEncryptData(this.cardNo, Integer.toString(this.installmentMonth), this.cvc);
+        resultStringBuffer.append(getLeftOrRightPaddingData(암호화된카드정보, encryptDataBody));
+        resultStringBuffer.append(getLeftOrRightPaddingData(예비필드, ""));
+        resultStringBuffer.insert(0, totalLength - resultStringBuffer.length());
+
+        return CardPayment.builder()
+                .paymentId(paymentId)
+                .dataBody(resultStringBuffer.toString())
+                .build();
+    }
 
 }
