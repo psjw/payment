@@ -1,7 +1,7 @@
 package com.project.insure.payment.application.usecase;
 
 import com.project.insure.exception.payment.ExistsCancelPaymentException;
-import com.project.insure.exception.payment.NotCancelPaymentException;
+import com.project.insure.exception.payment.ImpossibleCancelPaymentException;
 import com.project.insure.exception.payment.PaymentNotFoundException;
 import com.project.insure.payment.domain.card.code.CardPaymentDataPadding;
 import com.project.insure.payment.domain.card.code.PaymentCompany;
@@ -14,7 +14,6 @@ import com.project.insure.payment.domain.card.service.HanaCardCancelPaymentWrite
 import com.project.insure.payment.domain.card.service.HanaCardPaymentReadServiceImpl;
 import com.project.insure.util.ManagementIdGeneratorUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class HanaCardCancelPaymentUsecase implements CardCancelPaymentUsecase {
         //3. 데이터 취소 API 호출
         Long paymentAmount = Long.parseLong(getPaymentValueInDataBody(결제금액, paymentInfo.getDataBody()));
         if(paymentAmount < requestDto.getAmount()){
-            throw new NotCancelPaymentException(String.format("[결제번호 : [%s]] 결제금액보다 취소금액이 많습니다.",paymentId));
+            throw new ImpossibleCancelPaymentException(String.format("[결제번호 : [%s]] 결제금액보다 취소금액이 많습니다.",paymentId));
         }
         String cancelPaymentId = ManagementIdGeneratorUtil.getPaymentId(PrefixDataType.취소);
         String cancelDataBody = convertDataBodyToCancelDataBodyByPaymentInfo(paymentInfo, cancelPaymentId);

@@ -1,5 +1,7 @@
 package com.project.insure.exception;
 
+import com.project.insure.exception.payment.ExistsCancelPaymentException;
+import com.project.insure.exception.payment.ImpossibleCancelPaymentException;
 import com.project.insure.exception.payment.PaymentNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,18 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     public final ResponseEntity<Object> handlePaymentNotFoundExceptions(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ImpossibleCancelPaymentException.class)
+    public final ResponseEntity<Object> handleImpossibleCancelPaymentExceptions(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExistsCancelPaymentException.class)
+    public final ResponseEntity<Object> handleExistsCancelPaymentExceptions(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override
