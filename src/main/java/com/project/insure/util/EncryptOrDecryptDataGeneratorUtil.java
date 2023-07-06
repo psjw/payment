@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @UtilityClass
-public class EncryptAndDecryptDataGeneratorUtil {
+public class EncryptOrDecryptDataGeneratorUtil {
     private static String POST_APPENDIX = "|";
     public String getEncryptData(String cardNo, String installmentMonth, String cvc) {
         //return AESUtil.encrypt(cardNo+"|"+)
@@ -23,6 +23,7 @@ public class EncryptAndDecryptDataGeneratorUtil {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
                  InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             log.error("[EncryptAndDecryptDataBodyGeneratorUtil.getEncryptDataBody] Message : {}",e.getMessage());
+            //TODO : EncrytException 처리
             throw new RuntimeException(e);
         }
     }
@@ -33,6 +34,7 @@ public class EncryptAndDecryptDataGeneratorUtil {
         } catch (NoSuchPaddingException | BadPaddingException | NoSuchAlgorithmException |
                  InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException e) {
             log.error("[EncryptAndDecryptDataBodyGeneratorUtil.getDecryptDataBody] Message : {}",e.getMessage());
+            //TODO : DecrytException 처리
             throw new RuntimeException(e);
         }
     }

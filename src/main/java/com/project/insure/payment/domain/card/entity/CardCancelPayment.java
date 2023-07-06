@@ -1,9 +1,15 @@
 package com.project.insure.payment.domain.card.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CardCancelPayment extends BaseEntity{
 
     @Id

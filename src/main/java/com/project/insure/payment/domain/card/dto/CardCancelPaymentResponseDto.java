@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 @ToString
-public class PaymentIdResponseDto {
-    private String paymentId;
+public class CardCancelPaymentResponseDto {
+    private String paymentNo;
+    private String dataBody;
 }

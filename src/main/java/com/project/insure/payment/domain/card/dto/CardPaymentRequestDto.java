@@ -1,9 +1,9 @@
 package com.project.insure.payment.domain.card.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.insure.payment.domain.card.entity.CardPayment;
-import com.project.insure.util.EncryptAndDecryptDataGeneratorUtil;
+import com.project.insure.util.EncryptOrDecryptDataGeneratorUtil;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.*;
 
@@ -48,6 +48,9 @@ public class CardPaymentRequestDto {
     private Long amount; //결제액(100원 이상, 10억원 이하, 숫자)
     private Long vat; //부가가치세 (option)
 
+    @JsonIgnore
+    private final String originPaymentId = "";
+
     public Long getVat(){
         if(Objects.isNull(vat)){
             this.vat =  Math.round((double) this.amount / (double) 11);
@@ -68,13 +71,15 @@ public class CardPaymentRequestDto {
                 .append(getLeftOrRightPaddingData(카드유효기간, this.expiredPeriod))
                 .append(getLeftOrRightPaddingData(CVC, this.cvc))
                 .append(getLeftOrRightPaddingData(결제금액, Long.toString(this.amount)))
-                .append(getLeftOrRightPaddingData(부가가치세, Long.toString(getVat())));
+                .append(getLeftOrRightPaddingData(부가가치세, Long.toString(getVat())))
+                .append(getLeftOrRightPaddingData(원거래관리번호, originPaymentId));
 
-        String encryptDataBody = EncryptAndDecryptDataGeneratorUtil
+
+        String encryptDataBody = EncryptOrDecryptDataGeneratorUtil
                 .getEncryptData(this.cardNo, Integer.toString(this.installmentMonth), this.cvc);
         resultStringBuffer.append(getLeftOrRightPaddingData(암호화된카드정보, encryptDataBody));
-        resultStringBuffer.append(getLeftOrRightPaddingData(예비필드, ""));
-        resultStringBuffer.insert(0, totalLength - resultStringBuffer.length());
+        resultStringBuffer.append(getLeftOrRightPaddingData(예비필드, originPaymentId));
+        resultStringBuffer.insert(0,  getLeftOrRightPaddingData(데이터길이,Integer.toString(resultStringBuffer.length())));
 
         return CardPayment.builder()
                 .paymentId(paymentId)

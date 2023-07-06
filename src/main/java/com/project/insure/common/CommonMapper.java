@@ -9,5 +9,5 @@ public interface CommonMapper<D, E> {
     E toEntity(D d);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromDot(D dto, @MappingTarget E entity);
+    void updateFromDto(D dto, @MappingTarget E entity);
 }

@@ -1,6 +1,17 @@
 package com.project.insure.payment.domain.card.dto;
 
+
+import lombok.*;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@ToString
 public class CardPaymentResponseDto {
-    private String paymentNo;
-    private String data;
+    private String paymentId;
+    private String dataBody;
+
+
 }

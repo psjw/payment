@@ -78,5 +78,21 @@ public class AESUtil {
         String encrypt = AESUtil.encrypt("1234567890123456|1125|777");
         System.out.println(encrypt);
         System.out.println(AESUtil.decrypt(encrypt));
+
+        String test = "_446PAYMENT___XXXXXXXXXXXXXXXXXXXX1234567890123456____001125777____11000000\n" +
+                "00010000____________________YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n" +
+                "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY________________________\n" +
+                "____________________________________________________________________________\n" +
+                "____________________________________________________________________________";
+
+        int x = test.indexOf("XXXXXXXXXXXXXXXXXXXX");
+
+        String y = "ZZZZZZZZZZZZZZZZZZZZ";
+        System.out.println(x);
+        String a1 = test.replace("XXXXXXXXXXXXXXXXXXXX", y);
+        System.out.println(a1);
+
+        System.out.println();
+
     }
 }
