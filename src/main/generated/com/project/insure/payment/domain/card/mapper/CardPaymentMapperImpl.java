@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-07T00:59:57+0900",
+    date = "2023-07-07T17:46:41+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.18 (Amazon.com Inc.)"
 )
 @Component
 public class CardPaymentMapperImpl implements CardPaymentMapper {
 
     @Override
-    public CardPaymentResponseDto toDto(CardPayment e) {
-        if ( e == null ) {
+    public CardPaymentResponseDto toDto(CardPayment arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
@@ -25,22 +25,22 @@ public class CardPaymentMapperImpl implements CardPaymentMapper {
     }
 
     @Override
-    public CardPayment toEntity(CardPaymentResponseDto d) {
-        if ( d == null ) {
+    public CardPayment toEntity(CardPaymentResponseDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         CardPayment.CardPaymentBuilder cardPayment = CardPayment.builder();
 
-        cardPayment.paymentId( d.getPaymentId() );
-        cardPayment.dataBody( d.getDataBody() );
+        cardPayment.paymentId( arg0.getPaymentId() );
+        cardPayment.dataBody( arg0.getDataBody() );
 
         return cardPayment.build();
     }
 
     @Override
-    public void updateFromDto(CardPaymentResponseDto dto, CardPayment entity) {
-        if ( dto == null ) {
+    public void updateFromDto(CardPaymentResponseDto arg0, CardPayment arg1) {
+        if ( arg0 == null ) {
             return;
         }
     }

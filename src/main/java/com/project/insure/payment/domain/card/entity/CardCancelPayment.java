@@ -2,6 +2,7 @@ package com.project.insure.payment.domain.card.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class CardCancelPayment extends BaseEntity{
 
     @Id
@@ -24,6 +26,5 @@ public class CardCancelPayment extends BaseEntity{
 
     @Column(length = 450, nullable = false)
     private String dataBody;
-
 
 }

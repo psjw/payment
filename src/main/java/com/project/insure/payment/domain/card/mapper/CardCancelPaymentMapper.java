@@ -6,6 +6,7 @@ import com.project.insure.payment.domain.card.dto.CardPaymentResponseDto;
 import com.project.insure.payment.domain.card.entity.CardCancelPayment;
 import com.project.insure.payment.domain.card.entity.CardPayment;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface CardCancelPaymentMapper extends CommonMapper<CardCancelPaymentResponseDto, CardCancelPayment> {

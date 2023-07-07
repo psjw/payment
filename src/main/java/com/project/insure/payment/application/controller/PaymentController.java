@@ -3,11 +3,7 @@ package com.project.insure.payment.application.controller;
 import com.project.insure.payment.application.usecase.cardfinder.CardPaymentServiceFinder;
 import com.project.insure.payment.application.usecase.CardPaymentUsecase;
 import com.project.insure.payment.domain.card.code.PaymentCompany;
-import com.project.insure.payment.domain.card.code.PrefixDataType;
-import com.project.insure.payment.domain.card.dto.CardPaymentRequestDto;
-import com.project.insure.payment.domain.card.dto.CardPaymentResponseDto;
-import com.project.insure.payment.domain.card.dto.PaymentIdResponseDto;
-import com.project.insure.util.ManagementIdGeneratorUtil;
+import com.project.insure.payment.domain.card.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +18,20 @@ import javax.validation.constraints.Size;
 public class PaymentController {
     private final CardPaymentServiceFinder paymentServiceFinder;
 
-    @GetMapping("/getPaymentId")
-    public PaymentIdResponseDto getPaymentId(){
-        String paymentId = ManagementIdGeneratorUtil.getPaymentId(PrefixDataType.결제);
-        return PaymentIdResponseDto.builder().paymentId(paymentId).build();
-    }
-    //TODO : ArgumentException 처리
     @PostMapping("/card")
-    public CardPaymentResponseDto cardPayment(@RequestBody CardPaymentRequestDto requestDto
-            , @RequestHeader(value = "Data-Type", required = true) String dataType){
+    public CardPaymentResponseDto cardPayment(@RequestBody CardPaymentRequestDto requestDto,
+                                              @RequestHeader(value = "Data-Type", required = true) String dataType){
         CardPaymentUsecase paymentUsecase = paymentServiceFinder.findPaymentUsecaseByCardCompany(PaymentCompany.Hana.name());
-
-        paymentUsecase.payment(requestDto);
-        return null;
+        CardPaymentResponseDto cardPaymentResponseDto = paymentUsecase.payment(requestDto);
+        return cardPaymentResponseDto;
     }
 
-    @GetMapping("")
-    public void aa(@Valid @RequestBody CardPaymentRequestDto requestDto){
-        System.out.println("a");
+    @GetMapping("/payment/info")
+    public CardPaymentInfoResponseDto getCardPaymentInfo(@Valid @RequestBody CardPaymentInfoRequestDto requestDto,
+                                                         @RequestHeader(value = "Payment-Id", required = true) @Size(min = 20, max = 20) String paymentId,
+                                                         @RequestHeader(value = "Data-Type", required = true) String dataType){
+        CardPaymentUsecase paymentUsecase = paymentServiceFinder.findPaymentUsecaseByCardCompany(PaymentCompany.Hana.name());
+        CardPaymentInfoResponseDto cardPaymentInfoResponseDto = paymentUsecase.findPaymentAndCancelInfoByPaymentId(requestDto, paymentId);
+        return cardPaymentInfoResponseDto;
     }
 }

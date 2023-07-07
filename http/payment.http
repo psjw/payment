@@ -2,8 +2,7 @@
 POST {{payment-api}}/payment/card
 Content-Type: application/json
 Data-Type: PAYMENT
-Payment-Id: 1234512345ß
-
+Payment-Id:
 
 {
     "cardNo" : "12345678910",

@@ -9,6 +9,6 @@ import lombok.*;
 @Getter
 @ToString
 public class CardCancelPaymentResponseDto {
-    private String paymentNo;
+    private String paymentId;
     private String dataBody;
 }

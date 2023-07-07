@@ -2,6 +2,7 @@ package com.project.insure.exception;
 
 import com.project.insure.exception.payment.ExistsCancelPaymentException;
 import com.project.insure.exception.payment.ImpossibleCancelPaymentException;
+import com.project.insure.exception.payment.NotSupportedCardCompanyException;
 import com.project.insure.exception.payment.PaymentNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -42,4 +43,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Validation Failed", ex.getBindingResult().toString());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NotSupportedCardCompanyException.class)
+    protected ResponseEntity<Object> handleNotSupportedCardCompanyExceptions(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Validation Failed", ex.getBindingResult().toString());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

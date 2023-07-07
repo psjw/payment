@@ -36,4 +36,30 @@ public enum CardPaymentDataPadding {
         throw new RuntimeException("포함되지 않은 데이터 입니다.");
     }
 
+
+
+    public static Integer getDataBodyInLastIndex(CardPaymentDataPadding cardPaymentDataPadding){
+        int result = getDataBodyInStartIndex(cardPaymentDataPadding);
+        for(CardPaymentDataPadding value  : values()){
+            result += value.getLength();
+            if(value.name().equals(cardPaymentDataPadding.name())){
+                break;
+            }
+        }
+        return  result;
+    }
+    public static Integer getDataBodyInStartIndex(CardPaymentDataPadding cardPaymentDataPadding) {
+        Integer result = 0;
+        for(CardPaymentDataPadding value  : values()){
+            if(value.name().equals(cardPaymentDataPadding.name())){
+                break;
+            }
+            result += value.getLength();
+        }
+        return result;
+    }
+
+    public static String getPaymentValueInDataBody(CardPaymentDataPadding cardPaymentDataPadding, String dataBody){
+        return dataBody.substring(getDataBodyInStartIndex(cardPaymentDataPadding), getDataBodyInLastIndex(cardPaymentDataPadding));
+    }
 }

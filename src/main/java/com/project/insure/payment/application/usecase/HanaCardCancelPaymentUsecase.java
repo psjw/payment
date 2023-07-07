@@ -3,7 +3,6 @@ package com.project.insure.payment.application.usecase;
 import com.project.insure.exception.payment.ExistsCancelPaymentException;
 import com.project.insure.exception.payment.ImpossibleCancelPaymentException;
 import com.project.insure.exception.payment.PaymentNotFoundException;
-import com.project.insure.payment.domain.card.code.CardPaymentDataPadding;
 import com.project.insure.payment.domain.card.code.PaymentCompany;
 import com.project.insure.payment.domain.card.code.PrefixDataType;
 import com.project.insure.payment.domain.card.dto.CardCancelPaymentRequestDto;
@@ -32,15 +31,9 @@ public class HanaCardCancelPaymentUsecase implements CardCancelPaymentUsecase {
         //1. 결제정보 API 조회
         CardPaymentResponseDto paymentInfo = hanaCardPaymentReadService.findPaymentInfoByPaymentId(paymentId);
 
-        if(Objects.isNull(paymentInfo)){
-            throw new PaymentNotFoundException(String.format("[결제번호 : [%s]] 결제 이력이 없습니다. ", paymentId));
-        }
-
         //2. 취소정보 API 조회
-        CardCancelPaymentResponseDto cancelPaymentInfo = hanaCardPaymentWriteService.findCancelPaymentInfoByPaymentId(paymentId);
-        if(Objects.nonNull(cancelPaymentInfo)){
-            throw new ExistsCancelPaymentException(String.format("[결제번호 : [%s]] 이미 취소되었습니다.",paymentId));
-        }
+        hanaCardPaymentWriteService.findCancelPaymentInfoByPaymentId(paymentId);
+
         //3. 데이터 취소 API 호출
         Long paymentAmount = Long.parseLong(getPaymentValueInDataBody(결제금액, paymentInfo.getDataBody()));
         if(paymentAmount < requestDto.getAmount()){
@@ -62,33 +55,8 @@ public class HanaCardCancelPaymentUsecase implements CardCancelPaymentUsecase {
         StringBuffer replaceBuffer = new StringBuffer(paymentInfo.getDataBody());
         int paymentPosition = paymentInfo.getDataBody().indexOf(paymentInfo.getPaymentId());
         replaceBuffer.replace(paymentPosition, paymentPosition + paymentInfo.getPaymentId().length(), cancelPaymentId);
-        replaceBuffer.replace(getPaymentDataBodyStartIndex(결제관리번호),getPaymentDataBodyLastIndex(결제관리번호), paymentInfo.getPaymentId());
+        replaceBuffer.replace(getDataBodyInStartIndex(결제관리번호), getDataBodyInLastIndex(결제관리번호), paymentInfo.getPaymentId());
         return replaceBuffer.toString();
-    }
-
-    private String getPaymentValueInDataBody(CardPaymentDataPadding cardPaymentDataPadding, String dataBody){
-        return dataBody.substring(getPaymentDataBodyStartIndex(cardPaymentDataPadding), getPaymentDataBodyLastIndex(cardPaymentDataPadding));
-    }
-
-    private Integer getPaymentDataBodyLastIndex(CardPaymentDataPadding cardPaymentDataPadding){
-        int result = getPaymentDataBodyStartIndex(cardPaymentDataPadding);
-        for(CardPaymentDataPadding value  : values()){
-            result += value.getLength();
-            if(value.name().equals(cardPaymentDataPadding.name())){
-                break;
-            }
-        }
-        return  result;
-    }
-    private Integer getPaymentDataBodyStartIndex(CardPaymentDataPadding cardPaymentDataPadding) {
-        Integer result = 0;
-        for(CardPaymentDataPadding value  : values()){
-            if(value.name().equals(cardPaymentDataPadding.name())){
-                break;
-            }
-            result += value.getLength();
-        }
-        return result;
     }
 
 }
