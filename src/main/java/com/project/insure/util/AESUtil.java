@@ -83,8 +83,8 @@ public class AESUtil {
                 "00010000____________________YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n" +
                 "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY________________________\n" +
                 "____________________________________________________________________________\n" +
-                "____________________________________________________________________________";
-
+                "____________________________________________________________________________".replaceAll("_"," ");
+        System.out.println(test);
         int x = test.indexOf("XXXXXXXXXXXXXXXXXXXX");
 
         String y = "ZZZZZZZZZZZZZZZZZZZZ";

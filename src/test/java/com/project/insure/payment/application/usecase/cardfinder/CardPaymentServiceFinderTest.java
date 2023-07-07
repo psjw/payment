@@ -3,6 +3,7 @@ package com.project.insure.payment.application.usecase.cardfinder;
 import com.project.insure.exception.payment.NotSupportedCardCompanyException;
 import com.project.insure.payment.application.usecase.CardPaymentUsecase;
 import com.project.insure.payment.application.usecase.HanaCardPaymentUsecase;
+import com.project.insure.payment.application.usecase.PaymentDuplicateService;
 import com.project.insure.payment.domain.card.code.PaymentCompany;
 import com.project.insure.payment.domain.card.mapper.CardCancelPaymentMapper;
 import com.project.insure.payment.domain.card.mapper.CardPaymentMapper;
@@ -33,6 +34,7 @@ class CardPaymentServiceFinderTest {
     private HanaCardCancelPaymentReadServiceImpl hanaCardCancelPaymentReadService;
 
     private HanaCardPaymentUsecase hanaCardPaymentUsecase;
+    private PaymentDuplicateService paymentDuplicateService;
 
     private final CardPaymentRepository cardPaymentRepository = mock(CardPaymentRepository.class);
     private final CardCancelPaymentRepository cardCancelPaymentRepository = mock(CardCancelPaymentRepository.class);
@@ -45,10 +47,11 @@ class CardPaymentServiceFinderTest {
     void setUp() {
         CardPaymentMapper cardPaymentMapper = Mappers.getMapper(CardPaymentMapper.class);
         CardCancelPaymentMapper cardCancelPaymentMapper = Mappers.getMapper(CardCancelPaymentMapper.class);
+        paymentDuplicateService = new PaymentDuplicateService();
         hanaCardPaymentWriteService = new HanaCardPaymentWriteServiceImpl(cardPaymentMapper, cardPaymentRepository);
         hanaCardPaymentReadService = new HanaCardPaymentReadServiceImpl(cardPaymentMapper, cardPaymentRepository);
         hanaCardCancelPaymentReadService = new HanaCardCancelPaymentReadServiceImpl(cardCancelPaymentMapper, cardCancelPaymentRepository);
-        hanaCardPaymentUsecase = new HanaCardPaymentUsecase(hanaCardPaymentWriteService, hanaCardPaymentReadService, hanaCardCancelPaymentReadService);
+        hanaCardPaymentUsecase = new HanaCardPaymentUsecase(hanaCardPaymentWriteService, hanaCardPaymentReadService, hanaCardCancelPaymentReadService, paymentDuplicateService);
         paymentUsecases.add(hanaCardPaymentUsecase);
         cardPaymentServiceFinder = new CardPaymentServiceFinder(paymentUsecases);
     }

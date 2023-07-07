@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 @RestController
@@ -19,6 +18,7 @@ import javax.validation.constraints.Size;
 @Validated
 public class CancelPaymentController {
     private final CardCancelPaymentServiceFinder cardCancelPaymentServiceFinder;
+
 
     @GetMapping("/getPaymentId")
     public PaymentIdResponseDto getPaymentId(){
@@ -30,6 +30,7 @@ public class CancelPaymentController {
     public CardCancelPaymentResponseDto cardCancelPayment(@RequestBody CardCancelPaymentRequestDto requestDto
             , @RequestHeader(value = "Payment-Id", required = true) @Size(min = 20, max = 20) String paymentId
             , @RequestHeader(value = "Data-Type", required = true) String dataType){
+
         CardCancelPaymentUsecase paymentUsecaseByCardCompany = cardCancelPaymentServiceFinder.findPaymentUsecaseByCardCompany(PaymentCompany.Hana.name());
 
         CardCancelPaymentResponseDto cardCancelPaymentResponseDto = paymentUsecaseByCardCompany.cancelPayment(requestDto, paymentId, dataType);

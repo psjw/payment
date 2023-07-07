@@ -1,9 +1,11 @@
 package com.project.insure.payment.domain.card.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.insure.payment.domain.card.code.CardPaymentDataPadding;
 import com.project.insure.payment.domain.card.entity.CardPayment;
 import com.project.insure.util.EncryptOrDecryptDataGeneratorUtil;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.*;
 
@@ -85,6 +87,19 @@ public class CardPaymentRequestDto {
                 .paymentId(paymentId)
                 .dataBody(resultStringBuffer.toString())
                 .build();
+    }
+
+
+    private String getLeftOrRightPaddingData(CardPaymentDataPadding cardPaymentDataLength, String data) {
+        String reqPayType = cardPaymentDataLength.getPadType();
+        if (StringUtils.contains(reqPayType, "leftPad")) {
+            return StringUtils.leftPad(data, cardPaymentDataLength.getLength(), cardPaymentDataLength.getPadStr());
+        }
+
+        if (StringUtils.contains(reqPayType, "rightPad")) {
+            return StringUtils.rightPad(data, cardPaymentDataLength.getLength(), cardPaymentDataLength.getPadStr());
+        }
+        throw new RuntimeException("포함되지 않은 데이터 입니다.");
     }
 
 }

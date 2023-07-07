@@ -1,9 +1,6 @@
 package com.project.insure.exception;
 
-import com.project.insure.exception.payment.ExistsCancelPaymentException;
-import com.project.insure.exception.payment.ImpossibleCancelPaymentException;
-import com.project.insure.exception.payment.NotSupportedCardCompanyException;
-import com.project.insure.exception.payment.PaymentNotFoundException;
+import com.project.insure.exception.payment.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +16,11 @@ import java.util.Date;
 @RestController
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-
+    @ExceptionHandler(DuplicatePaymentException.class)
+    public final ResponseEntity<Object> handleDuplicatePaymentExceptions(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
     @ExceptionHandler(PaymentNotFoundException.class)
     public final ResponseEntity<Object> handlePaymentNotFoundExceptions(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));

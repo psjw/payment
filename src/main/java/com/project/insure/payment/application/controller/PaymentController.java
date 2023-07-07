@@ -1,5 +1,7 @@
 package com.project.insure.payment.application.controller;
 
+import com.project.insure.exception.payment.DuplicatePaymentException;
+import com.project.insure.payment.application.usecase.PaymentDuplicateService;
 import com.project.insure.payment.application.usecase.cardfinder.CardPaymentServiceFinder;
 import com.project.insure.payment.application.usecase.CardPaymentUsecase;
 import com.project.insure.payment.domain.card.code.PaymentCompany;

@@ -26,6 +26,13 @@ class HanaCardCancelPaymentWriteServiceImplTest {
     private final String cancelPaymentId = "C1234567891234567890";
     private final String notFoundPaymentId = "P9876543219876543210";
 
+    private final String resultCancelDataBody = "_446CANCEL____ZZZZZZZZZZZZZZZZZZZZ1234567890123456____001125777____11000000\n" +
+            "00010000XXXXXXXXXXXXXXXXXXXXYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n" +
+            "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY________________________\n" +
+            "____________________________________________________________________________\n" +
+            "____________________________________________________________________________\n" +
+            "_______________________________________________________________________";
+
     private final String resultDataBody = "_446PAYMENT___XXXXXXXXXXXXXXXXXXXX1234567890123456____001125777____11000000\n" +
             "00010000____________________YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n" +
             "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY________________________\n" +

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-07T17:46:41+0900",
+    date = "2023-07-07T21:16:46+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.18 (Amazon.com Inc.)"
 )
 @Component
@@ -20,6 +20,9 @@ public class CardPaymentMapperImpl implements CardPaymentMapper {
         }
 
         CardPaymentResponseDto.CardPaymentResponseDtoBuilder cardPaymentResponseDto = CardPaymentResponseDto.builder();
+
+        cardPaymentResponseDto.paymentId( arg0.getPaymentId() );
+        cardPaymentResponseDto.dataBody( arg0.getDataBody() );
 
         return cardPaymentResponseDto.build();
     }
